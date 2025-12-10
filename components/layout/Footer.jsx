@@ -2,9 +2,9 @@ import Link from "next/link"
 import { Target, Github, Twitter, Mail } from "lucide-react"
 
 const footerLinks = [
-  { name: "Features", href: "#features" },
-  { name: "Pricing", href: "#pricing" },
-  { name: "About", href: "#about" },
+  { name: "Features", href: "/features" },
+  { name: "Pricing", href: "/pricing" },
+  { name: "About", href: "/about" },
 ]
 
 const legalLinks = [
