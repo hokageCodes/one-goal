@@ -6,28 +6,28 @@ import { ChevronDown } from "lucide-react";
 
 const faqs = [
   {
-    question: "How is One Goal different from other task managers?",
-    answer: "Unlike traditional task managers that overwhelm you with endless lists, One Goal helps you focus on just one primary goal at a time. This singular focus eliminates decision fatigue and maximizes your productivity."
+    question: "Why only ONE goal? That seems limiting.",
+    answer: "That's the point. Limiting is liberating. Free plan: one goal total. Pro plan: one goal per timeframe (daily, weekly, monthly)—so you can have three active goals simultaneously. The constraint kills decision paralysis and forces you to pick what actually matters."
   },
   {
-    question: "Can I really only set one goal?",
-    answer: "On the Free plan, yes—one goal at a time. Pro users can set unlimited goals per month, but you still focus on one goal per timeframe. This intentional constraint is what makes One Goal so effective."
+    question: "What are timeframes and how do they work?",
+    answer: "Daily goal: complete today. Weekly goal: done by Sunday. Monthly goal: finish by the 30th. Free users pick ONE timeframe and get one goal. Pro users can run all three simultaneously—but still just one per timeframe. No endless lists allowed."
   },
   {
-    question: "What is Coach PO?",
-    answer: "Coach PO is your AI-powered productivity coach. It provides personalized guidance, motivation, and accountability to help you stay on track. Pro users get access to deeper coaching flows with more advanced insights."
+    question: "What's this 'Coach PO roast mode' everyone talks about?",
+    answer: "Coach PO has two modes: encouraging (default) and roast mode (Pro tier). Roast mode doesn't coddle you. If you're procrastinating, it calls you out. Some people need hugs, others need honesty. We give you both options."
   },
   {
-    question: "How do reminders work?",
-    answer: "We send smart, context-aware daily reminders to keep your goal top of mind. Pro users can customize their reminder tone—choose between encouraging support or playful roasting to match your motivation style."
+    question: "Can I change my goal mid-timeframe?",
+    answer: "Yes, but we'll ask you why. Changing goals constantly defeats the purpose. If you realize you picked wrong, fine—switch it. But if you're just scared of commitment, Coach PO will notice."
   },
   {
-    question: "What happens if I don't complete my goal?",
-    answer: "Goals aren't deleted—they're archived. Pro users can revive archived goals with our Archive Revival feature, learning from past attempts to improve future success."
+    question: "What happens to goals I don't finish?",
+    answer: "They're archived, not deleted. Pro users can revive them later and see patterns in what stalled them. Failure data is useful—it shows you where you bullshit yourself the most."
   },
   {
-    question: "Can I cancel anytime?",
-    answer: "Absolutely! All paid plans can be canceled anytime with no questions asked. We also offer a 14-day money-back guarantee if you're not satisfied."
+    question: "Is there a refund policy?",
+    answer: "14-day money-back guarantee. No games, no questions. If you don't finish more goals with One Goal than without it, get your money back."
   }
 ];
 
@@ -65,10 +65,10 @@ export default function FAQSection() {
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-10 md:mb-12">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
-              Frequently Asked Questions
+              Questions? Answers.
             </h2>
             <p className="text-base md:text-lg text-muted-foreground">
-              Everything you need to know about One Goal
+              No fluff. Just what you actually want to know.
             </p>
           </div>
 

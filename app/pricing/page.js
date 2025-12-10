@@ -48,19 +48,15 @@ const plans = [
     name: "Focus+",
     price: "12.99",
     period: "month",
-    description: "Ultimate productivity powerhouse",
+    description: "Maximum discipline. Zero excuses.",
     features: [
       { text: "Everything in Pro", included: true },
       { text: "Private accountability group", included: true },
-      { text: "Early access to templates & themes", included: true },
+      { text: "Early access to new features", included: true },
       { text: "Beta access to Team Mode", included: true },
-      { text: "Priority support", included: true },
-      { text: "Custom integrations", included: true },
-      { text: "Advanced reporting", included: true },
-      { text: "Dedicated account manager", included: true },
-      { text: "Annual strategic planning session", included: true }
+      { text: "Priority support", included: true }
     ],
-    cta: "Go Premium",
+    cta: "Go All In",
     href: "/signup?plan=focus",
     popular: false
   }
@@ -94,10 +90,10 @@ export default function PricingPage() {
         <Container>
           <div className="max-w-3xl mx-auto text-center space-y-6">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-              Simple, <span className="text-primary">Transparent</span> Pricing
+              Pick Your <span className="text-primary">Discipline Level</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-              Choose the plan that fits your goals. Start free, upgrade anytime.
+              Start free. Upgrade when you're serious. Cancel if you're not. No games.
             </p>
           </div>
         </Container>

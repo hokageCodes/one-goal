@@ -60,11 +60,12 @@ export default function AboutPage() {
         <Container>
           <div className="max-w-3xl mx-auto text-center space-y-6">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-              One Goal at a Time.<br />
-              <span className="text-primary">That's Our Philosophy.</span>
+              We're Not Another{" "}
+              <span className="text-primary">Productivity App.</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-              We built One Goal because we were tired of overwhelming productivity apps that promise everything and deliver chaos. Focus changes everything.
+              We're a philosophy shift. Most apps drown you in features and tabs. We force clarity: 
+              One goal. One timeframe. Zero bullshit.
             </p>
           </div>
         </Container>
@@ -91,13 +92,17 @@ export default function AboutPage() {
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Our Story</h2>
             <div className="space-y-4 text-muted-foreground leading-relaxed">
               <p>
-                One Goal was born from frustration. As productivity enthusiasts, we tried every app, system, and framework out there. The problem? They were all too complex. Hundreds of features, endless customization, infinite distractions.
+                One Goal was born from rage. We watched people (ourselves included) drown in Notion boards, 
+                Todoist lists, and ClickUp chaos. Hundreds of features. Zero results. Just tab-hopping and guilt.
               </p>
               <p>
-                We realized something simple: <strong className="text-foreground">most people don't need a project management suite—they need focus</strong>. They need to pick one meaningful goal and actually achieve it.
+                Then we had a revelation: <strong className="text-foreground">The problem isn't execution—it's decision paralysis</strong>. 
+                When everything is important, nothing is. You don't need more tools. You need constraints.
               </p>
               <p>
-                So we built One Goal. No feature bloat. No unnecessary complexity. Just you, your goal, and the tools to make it happen. The response has been overwhelming—thousands of users achieving more by doing less.
+                So we built One Goal with a single rule: Pick one thing per timeframe and finish it. No feature bloat. 
+                No endless lists. Just clarity, discipline, and a Coach who won't let you bullshit yourself. 
+                Turns out, people finish things when they stop juggling everything.
               </p>
             </div>
           </div>

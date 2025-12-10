@@ -8,14 +8,14 @@ const plans = [
     name: "Free",
     price: "0",
     period: "forever",
-    description: "Perfect for getting started",
+    description: "Start here. Get focused.",
     features: [
       "Set one goal",
       "Daily reminder",
       "Mood tracker",
       "Coach PO basic responses"
     ],
-    cta: "Get Started",
+    cta: "Start Free",
     href: "/signup",
     popular: false
   },
@@ -23,7 +23,7 @@ const plans = [
     name: "Pro",
     price: "4.99",
     period: "month",
-    description: "For serious achievers",
+    description: "For people who want results",
     features: [
       "Unlimited goals per month",
       "Deeper Coach PO coaching flows",
@@ -31,7 +31,7 @@ const plans = [
       "Archive revival",
       "Custom reminder tone"
     ],
-    cta: "Start Pro Trial",
+    cta: "Upgrade to Pro",
     href: "/signup?plan=pro",
     popular: true
   },
@@ -39,14 +39,15 @@ const plans = [
     name: "Focus+",
     price: "12.99",
     period: "month",
-    description: "Ultimate productivity powerhouse",
+    description: "Maximum discipline. Zero excuses.",
     features: [
       "All Pro features",
       "Private accountability group",
-      "Early access to templates & themes",
-      "Beta access to Team Mode"
+      "Early access to new features",
+      "Beta access to Team Mode",
+      "Priority support"
     ],
-    cta: "Go Premium",
+    cta: "Go All In",
     href: "/signup?plan=focus",
     popular: false
   }

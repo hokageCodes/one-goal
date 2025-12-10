@@ -7,25 +7,25 @@ import { Star, Quote } from "lucide-react";
 
 const testimonials = [
   {
-    name: "Sarah Mitchell",
-    role: "Product Designer",
-    avatar: "SM",
-    rating: 5,
-    text: "One Goal completely changed how I approach my work. I went from feeling overwhelmed by endless tasks to actually finishing what matters. My productivity has never been higher."
-  },
-  {
     name: "Marcus Chen",
     role: "Startup Founder",
     avatar: "MC",
     rating: 5,
-    text: "As a founder, I'm pulled in a million directions. One Goal forces me to prioritize ruthlessly. It's uncomfortable at first, but the results speak for themselves."
+    text: "I had 47 projects open. One Goal forced me to pick ONE. That discomfort? That's the feature. Three months later, I've shipped more than the previous six combined."
   },
   {
-    name: "Emily Rodriguez",
-    role: "Content Creator",
-    avatar: "ER",
+    name: "Sarah Mitchell",
+    role: "Product Designer",
+    avatar: "SM",
     rating: 5,
-    text: "The Coach PO feature is like having a personal accountability partner. The roast mode keeps me honest and motivated. I've completed more goals in 3 months than I did all last year."
+    text: "Coach PO called me out for saying 'I'll do it tomorrow' for the third time. That roast mode isn't for everyone, but if you need someone to stop your BS—this is it."
+  },
+  {
+    name: "Aisha Patel",
+    role: "Grad Student",
+    avatar: "AP",
+    rating: 5,
+    text: "Finished my thesis in 8 weeks instead of 'whenever'. One goal. One deadline. No escape routes. Brutal? Yes. Effective? Absolutely."
   }
 ];
 
@@ -46,10 +46,10 @@ export default function TestimonialsSection() {
             <span className="ml-2 text-sm font-semibold">4.9/5 from 1,200+ users</span>
           </div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
-            Loved by Achievers Worldwide
+            Real People. Real Results.
           </h2>
           <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
-            Real stories from people who transformed their productivity with One Goal
+            No fluff. Just what happened when they stopped juggling and started finishing.
           </p>
         </div>
 

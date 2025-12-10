@@ -16,24 +16,24 @@ export default function HeroSection() {
       <Container>
         <div className="flex flex-col items-center text-center space-y-8 max-w-4xl mx-auto">
           <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight">
-            Achieve Your{" "}
+            One Goal Per Day.{" "}
             <span className="text-primary bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-              One Goal
+              That's It.
             </span>{" "}
-            That Matters Most
+            Now Go.
           </h1>
           
           <p className="text-base md:text-lg lg:text-xl text-muted-foreground max-w-2xl leading-relaxed">
-            Stop juggling endless tasks. Focus your energy on the single most important goal 
-            and watch your productivity soar. Simple, focused, effective.
+            Too many goals? You're doing it wrong. Pick ONE thing per day, week, or month and actually finish it. 
+            No noise. No distractions. No excuses.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center pt-4">
             <Button size="lg" className="text-base px-8 py-6 h-auto" asChild>
-              <Link href="/get-started">Get Started Free</Link>
+              <Link href="/signup">Start Finishing Things</Link>
             </Button>
             <Button size="lg" variant="outline" className="text-base px-8 py-6 h-auto" asChild>
-              <Link href="/learn-more">Learn More</Link>
+              <Link href="/features">See How It Works</Link>
             </Button>
           </div>
           
