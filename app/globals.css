@@ -1,42 +1,142 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Base Colors - Light Mode */
+    --background: #ffffff;                    /* Main background - pure white */
+    --foreground: #0f172a;                   /* Main text color - dark slate */
+    
+    /* Card Colors */
+    --card: #ffffff;                         /* Card background - white */
+    --card-foreground: #0f172a;             /* Card text - dark slate */
+    
+    /* Popover/Dropdown Colors */
+    --popover: #ffffff;                      /* Popover background - white */
+    --popover-foreground: #0f172a;          /* Popover text - dark slate */
+    
+    /* Primary Brand Color - Blue */
+    --primary: #3b82f6;                     /* Primary button/links - vibrant blue */
+    --primary-foreground: #f8fafc;          /* Text on primary - light gray */
+    
+    /* Secondary Colors */
+    --secondary: #f1f5f9;                   /* Secondary background - light gray */
+    --secondary-foreground: #1e293b;        /* Text on secondary - medium slate */
+    
+    /* Muted/Subtle Colors */
+    --muted: #f1f5f9;                       /* Muted background - light gray */
+    --muted-foreground: #64748b;            /* Muted text - medium gray */
+    
+    /* Accent Colors */
+    --accent: #f1f5f9;                      /* Accent background - light gray */
+    --accent-foreground: #1e293b;           /* Accent text - medium slate */
+    
+    /* Destructive/Error Colors */
+    --destructive: #ef4444;                 /* Error/danger - red */
+    --destructive-foreground: #f8fafc;      /* Text on error - light gray */
+    
+    /* Border & Input Colors */
+    --border: #e2e8f0;                      /* Border color - light gray */
+    --input: #e2e8f0;                       /* Input border - light gray */
+    --ring: #3b82f6;                        /* Focus ring - primary blue */
+    
+    /* Border Radius */
+    --radius: 0.5rem;                       /* Default border radius - 8px */
+  }
+
+  .dark {
+    /* Base Colors - Dark Mode */
+    --background: #0f172a;                  /* Main background - dark slate */
+    --foreground: #f8fafc;                  /* Main text color - light gray */
+    
+    /* Card Colors */
+    --card: #0f172a;                        /* Card background - dark slate */
+    --card-foreground: #f8fafc;             /* Card text - light gray */
+    
+    /* Popover/Dropdown Colors */
+    --popover: #0f172a;                     /* Popover background - dark slate */
+    --popover-foreground: #f8fafc;          /* Popover text - light gray */
+    
+    /* Primary Brand Color - Lighter Blue for Dark Mode */
+    --primary: #60a5fa;                     /* Primary button/links - lighter blue */
+    --primary-foreground: #1e293b;          /* Text on primary - dark slate */
+    
+    /* Secondary Colors */
+    --secondary: #1e293b;                   /* Secondary background - medium slate */
+    --secondary-foreground: #f8fafc;        /* Text on secondary - light gray */
+    
+    /* Muted/Subtle Colors */
+    --muted: #1e293b;                       /* Muted background - medium slate */
+    --muted-foreground: #94a3b8;            /* Muted text - light gray */
+    
+    /* Accent Colors */
+    --accent: #1e293b;                      /* Accent background - medium slate */
+    --accent-foreground: #f8fafc;           /* Accent text - light gray */
+    
+    /* Destructive/Error Colors */
+    --destructive: #dc2626;                 /* Error/danger - darker red */
+    --destructive-foreground: #f8fafc;      /* Text on error - light gray */
+    
+    /* Border & Input Colors */
+    --border: #1e293b;                      /* Border color - medium slate */
+    --input: #1e293b;                       /* Input border - medium slate */
+    --ring: #60a5fa;                        /* Focus ring - lighter blue */
   }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    /* Consistent base font size */
+    font-size: 16px;
+    /* Smooth text rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  /* Typography Utilities - Consistent heading styles */
+  h1, .h1 {
+    @apply text-display-lg font-bold tracking-tight;
+  }
 
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
+  h2, .h2 {
+    @apply text-display-md font-semibold tracking-tight;
+  }
 
-a {
-  color: inherit;
-  text-decoration: none;
-}
+  h3, .h3 {
+    @apply text-heading-xl font-semibold;
+  }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+  h4, .h4 {
+    @apply text-heading-lg font-semibold;
+  }
+
+  h5, .h5 {
+    @apply text-heading-md font-semibold;
+  }
+
+  h6, .h6 {
+    @apply text-heading-sm font-semibold;
+  }
+
+  /* Body text defaults */
+  p, .body {
+    @apply text-body-md;
+  }
+
+  /* Link styles */
+  a {
+    @apply text-primary hover:underline transition-colors;
+  }
+
+  /* Consistent focus styles */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
   }
 }
