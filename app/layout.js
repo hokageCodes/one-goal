@@ -1,8 +1,9 @@
 import "./globals.css";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
+import { AuthProvider } from '@/contexts/AuthContext';
+import ConditionalLayout from '@/components/layout/ConditionalLayout';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 export const metadata = {
   metadataBase: new URL('https://onegoal.app'),
@@ -59,19 +60,21 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="h-full">
       <body>
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          closeOnClick
-          pauseOnHover
-          theme="light"
-        />
-        <Header />
-        <main className="flex-1 w-full px-2 md:container md:mx-auto">
-          {children}
-        </main>
-        <Footer />
+        <ErrorBoundary>
+          <AuthProvider>
+            <ToastContainer
+              position="top-right"
+              autoClose={3000}
+              hideProgressBar={false}
+              closeOnClick
+              pauseOnHover
+              theme="light"
+            />
+            <ConditionalLayout>
+              {children}
+            </ConditionalLayout>
+          </AuthProvider>
+        </ErrorBoundary>
       </body>
     </html>
   );

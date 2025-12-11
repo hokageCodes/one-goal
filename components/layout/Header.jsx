@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Menu, X, Target } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/contexts/AuthContext"
 
 const navItems = [
   { name: "Features", href: "/features" },
@@ -36,6 +37,7 @@ const NavLink = ({ href, children, onClick, className = "" }) => (
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { user } = useAuth()
   const closeMenu = () => setMobileMenuOpen(false)
 
   return (
@@ -52,12 +54,20 @@ export default function Header() {
         </div>
 
         <div className="hidden md:flex md:items-center md:space-x-4">
-          <Button variant="ghost" asChild>
-            <Link href="/login">Log In</Link>
-          </Button>
-          <Button asChild>
-            <Link href="/signup">Get Started</Link>
-          </Button>
+          {user ? (
+            <Button asChild>
+              <Link href="/dashboard">Dashboard</Link>
+            </Button>
+          ) : (
+            <>
+              <Button variant="ghost" asChild>
+                <Link href="/login">Log In</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/register">Get Started</Link>
+              </Button>
+            </>
+          )}
         </div>
 
         <Button
@@ -80,12 +90,20 @@ export default function Header() {
               </NavLink>
             ))}
             <div className="flex flex-col space-y-2 pt-4 border-t">
-              <Button variant="outline" asChild className="w-full">
-                <Link href="/login" onClick={closeMenu}>Log In</Link>
-              </Button>
-              <Button asChild className="w-full">
-                <Link href="/signup" onClick={closeMenu}>Get Started</Link>
-              </Button>
+              {user ? (
+                <Button asChild className="w-full">
+                  <Link href="/dashboard" onClick={closeMenu}>Dashboard</Link>
+                </Button>
+              ) : (
+                <>
+                  <Button variant="outline" asChild className="w-full">
+                    <Link href="/login" onClick={closeMenu}>Log In</Link>
+                  </Button>
+                  <Button asChild className="w-full">
+                    <Link href="/register" onClick={closeMenu}>Get Started</Link>
+                  </Button>
+                </>
+              )}
             </div>
           </div>
         </div>

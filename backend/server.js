@@ -49,6 +49,12 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/auth', require('./routes/firebaseAuthRoutes'));
 
+// Goal routes
+app.use('/api/goals', require('./routes/goalRoutes'));
+
+// Check-in routes
+app.use('/api/checkins', require('./routes/checkInRoutes'));
+
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);

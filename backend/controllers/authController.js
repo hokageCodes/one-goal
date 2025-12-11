@@ -98,30 +98,47 @@ exports.login = asyncHandler(async (req, res, next) => {
   // Validate input
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+    console.log('Validation errors:', errors.array());
     return res.status(400).json({ errors: errors.array() });
   }
 
   const { email, password } = req.body;
+  console.log('Login attempt for:', email);
 
   // Check if user exists (include password for comparison)
   const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
   if (!user) {
+    console.log('User not found');
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
+  console.log('User found:', {
+    email: user.email,
+    role: user.role,
+    isVerified: user.isVerified,
+    hasPassword: !!user.password
+  });
+
   // Check if password matches
   const isMatch = await user.comparePassword(password);
+  console.log('Password match:', isMatch);
+  
   if (!isMatch) {
+    console.log('Password does not match');
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
   // Check if email is verified
   if (!user.isVerified) {
+    console.log('Email not verified');
     return res.status(401).json({ message: 'Please verify your email before logging in' });
   }
 
+  console.log('About to generate token...');
+  
   // Generate token
   const token = user.generateAuthToken();
+  console.log('Token generated:', !!token);
 
   // Set cookie
   res.cookie('token', token, {
@@ -131,12 +148,15 @@ exports.login = asyncHandler(async (req, res, next) => {
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 
+  console.log('Sending success response');
+
   res.status(200).json({
     success: true,
     token,
     user: {
       id: user._id,
       email: user.email,
+      name: user.name,
       firstName: user.firstName,
       lastName: user.lastName,
       role: user.role,

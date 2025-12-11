@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { toast } from 'react-toastify';
 import { googleAuthFlow } from '@/lib/firebaseAuth';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -11,12 +12,18 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const router = useRouter();
+  const { login } = useAuth();
 
   // Email/Password Login
-  const handleEmailLogin = async (e) => {    e.preventDefault();
+  const handleEmailLogin = async (e) => {
+    e.preventDefault();
     setLoading(true);
 
     try {
+      console.log('=== LOGIN ATTEMPT ===');
+      console.log('Email:', email);
+      console.log('API URL:', process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000');
+      
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/auth/login`, {
         method: 'POST',
         headers: {
@@ -26,23 +33,37 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password })
       });
 
+      console.log('Response status:', response.status);
+      console.log('Response ok:', response.ok);
+
       if (!response.ok) {
         const data = await response.json();
+        console.error('Error response:', data);
         throw new Error(data.message || 'Login failed');
       }
 
       const data = await response.json();
+      console.log('Success response:', data);
       
-      // Store token and user data
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
+      // Use AuthContext login function
+      login(data.token, data.user);
+      console.log('AuthContext login called');
+      
+      // Show success message
+      toast.success('Login successful!');
       
       // Redirect to dashboard
-      router.push('/dashboard');
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 100);
+      
+      console.log('router.push called');
     } catch (err) {
+      console.error('Login error:', err);
       toast.error(err.message);
     } finally {
       setLoading(false);
+      console.log('=== LOGIN ATTEMPT COMPLETE ===');
     }
   };
 
@@ -54,16 +75,20 @@ export default function LoginPage() {
       // Firebase OAuth flow
       const { token, user, isNewUser } = await googleAuthFlow();
       
-      // Store token and user data
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      // Use AuthContext login function
+      login(token, user);
+      
+      // Show success message
+      if (isNewUser) {
+        toast.success('Welcome! Account created via Google.');
+      } else {
+        toast.success('Login successful!');
+      }
       
       // Redirect to dashboard
-      router.push('/dashboard');
-      
-      if (isNewUser) {
-        console.log('Welcome! Account created via Google.');
-      }
+      setTimeout(() => {
+        router.push('/dashboard');
+      }, 100);
     } catch (err) {
       toast.error(err.message || 'Failed to sign in with Google');
     } finally {
