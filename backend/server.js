@@ -3,12 +3,19 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
+const { initializeScheduler } = require('./services/notificationScheduler');
 
 // Load environment variables
 dotenv.config();
 
 // Connect to MongoDB
 connectDB();
+
+// Initialize notification scheduler
+if (process.env.NODE_ENV !== 'production') {
+  initializeScheduler();
+  console.log('⏰ Notification scheduler started');
+}
 
 const app = express();
 
@@ -29,8 +36,10 @@ app.use(cors({
     // Allow requests with no origin (like mobile apps or curl)
     if (!origin) return callback(null, true);
     if (allowedOrigins.indexOf(origin) === -1) {
+      console.warn(`❌ CORS blocked origin: ${origin}`);
       return callback(new Error('CORS policy violation'), false);
     }
+    console.log(`✅ CORS allowed origin: ${origin}`);
     return callback(null, true);
   },
   credentials: true
@@ -49,11 +58,20 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/auth', require('./routes/firebaseAuthRoutes'));
 
+// User routes
+app.use('/api/users', require('./routes/userRoutes'));
+
 // Goal routes
 app.use('/api/goals', require('./routes/goalRoutes'));
 
 // Check-in routes
 app.use('/api/checkins', require('./routes/checkInRoutes'));
+
+// Admin routes
+app.use('/api/admin', require('./routes/adminRoutes'));
+
+// Notification routes (for testing)
+app.use('/api/notifications', require('./routes/notificationRoutes'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {

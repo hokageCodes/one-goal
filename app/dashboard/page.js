@@ -4,7 +4,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { API_URL } from '@/lib/api';
-import { SkeletonCard, SkeletonText } from '@/components/Skeleton';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -49,16 +50,14 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <ProtectedRoute>
-        <div className="max-w-6xl mx-auto space-y-6">
-          <div>
-            <div className="h-10 bg-gray-200 rounded w-48 mb-2 animate-pulse"></div>
-            <div className="h-6 bg-gray-200 rounded w-64 animate-pulse"></div>
-          </div>
-          <div className="bg-gradient-to-r from-gray-300 to-gray-400 rounded-lg p-8 animate-pulse">
-            <div className="h-8 bg-gray-200 rounded w-3/4 mb-2"></div>
-            <div className="h-6 bg-gray-200 rounded w-32 ml-auto"></div>
-          </div>
-          <SkeletonCard />
+        <div className="space-y-4">
+          <div className="h-10 bg-muted animate-pulse rounded-md w-48"></div>
+          <Card>
+            <CardContent className="p-4 space-y-3">
+              <div className="h-4 bg-muted animate-pulse rounded"></div>
+              <div className="h-4 bg-muted animate-pulse rounded w-3/4"></div>
+            </CardContent>
+          </Card>
         </div>
       </ProtectedRoute>
     );
@@ -66,112 +65,139 @@ export default function DashboardPage() {
 
   return (
     <ProtectedRoute>
-      <div className="max-w-6xl mx-auto space-y-6">
-        {/* Welcome Header */}
+      <div className="space-y-4">
+        {/* Header */}
         <div>
-          <h1 className="text-4xl font-bold mb-2">Dashboard</h1>
-          <p className="text-gray-600 text-lg">Track your progress and stay focused</p>
+          <h1 className="text-display-md font-bold text-foreground">Dashboard</h1>
+          <p className="text-body-md text-muted-foreground">Track your progress and stay focused</p>
         </div>
 
         {/* Motivational Quote */}
-        <div className="bg-gradient-to-r from-black to-gray-800 text-white rounded-lg p-8">
-          <div className="text-2xl font-light italic mb-2">"{quote.text}"</div>
-          <div className="text-right text-gray-300">— {quote.author}</div>
-        </div>
+        <Card className="bg-primary text-primary-foreground border-0">
+          <CardContent className="p-4">
+            <blockquote className="space-y-2">
+              <p className="text-body-lg italic">"{quote.text}"</p>
+              <footer className="text-body-sm text-right opacity-90">— {quote.author}</footer>
+            </blockquote>
+          </CardContent>
+        </Card>
 
         {activeGoal ? (
           <>
             {/* Active Goal Card */}
-            <div className="bg-white rounded-lg shadow-lg p-8">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-bold">Your Current Goal</h2>
-                <span className="px-4 py-2 bg-green-100 text-green-800 font-semibold rounded-full">
-                  Active
-                </span>
-              </div>
-              
-              <h3 className="text-3xl font-bold mb-4">{activeGoal.title}</h3>
-              {activeGoal.description && (
-                <p className="text-gray-600 text-lg mb-6">{activeGoal.description}</p>
-              )}
+            <Card>
+              <CardHeader className="p-4 pb-3">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="space-y-1 flex-1">
+                    <CardDescription className="text-body-xs uppercase font-semibold tracking-wide">Current Goal</CardDescription>
+                    <CardTitle className="text-heading-xl">{activeGoal.title}</CardTitle>
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-body-xs font-semibold">
+                    <span className="w-1.5 h-1.5 bg-primary rounded-full"></span>
+                    Active
+                  </span>
+                </div>
+                {activeGoal.description && (
+                  <CardDescription className="text-body-sm mt-2">{activeGoal.description}</CardDescription>
+                )}
+              </CardHeader>
 
-              <div className="grid grid-cols-3 gap-6 mb-6">
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <p className="text-sm text-gray-500 font-medium mb-1">Deadline</p>
-                  <p className="text-xl font-bold">
-                    {new Date(activeGoal.deadline).toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                      year: 'numeric'
-                    })}
-                  </p>
-                </div>
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <p className="text-sm text-gray-500 font-medium mb-1">Days Left</p>
-                  <p className="text-xl font-bold">
-                    {getDaysRemaining(activeGoal.deadline)} days
-                  </p>
-                </div>
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <p className="text-sm text-gray-500 font-medium mb-1">Progress</p>
-                  <p className="text-xl font-bold">{activeGoal.progress || 0}%</p>
-                </div>
-              </div>
+              <CardContent className="p-4 pt-0 space-y-4">
+                {/* Stats Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <Card className="bg-secondary">
+                    <CardContent className="p-3 space-y-1">
+                      <p className="text-body-xs font-semibold text-muted-foreground uppercase tracking-wide">Deadline</p>
+                      <p className="text-heading-md font-bold">
+                        {new Date(activeGoal.deadline).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          year: 'numeric'
+                        })}
+                      </p>
+                    </CardContent>
+                  </Card>
 
-              {/* Progress Bar */}
-              <div className="mb-6">
-                <div className="w-full bg-gray-200 rounded-full h-3">
-                  <div
-                    className="bg-black h-3 rounded-full transition-all duration-300"
-                    style={{ width: `${activeGoal.progress || 0}%` }}
-                  />
-                </div>
-              </div>
+                  <Card className="bg-secondary">
+                    <CardContent className="p-3 space-y-1">
+                      <p className="text-body-xs font-semibold text-muted-foreground uppercase tracking-wide">Days Left</p>
+                      <p className="text-heading-md font-bold">{getDaysRemaining(activeGoal.deadline)} days</p>
+                    </CardContent>
+                  </Card>
 
-              <button
-                onClick={() => router.push('/dashboard/goal')}
-                className="w-full px-6 py-3 border-2 border-black rounded-lg font-semibold hover:bg-gray-50"
-              >
-                Manage Goal
-              </button>
-            </div>
+                  <Card className="bg-secondary">
+                    <CardContent className="p-3 space-y-1">
+                      <p className="text-body-xs font-semibold text-muted-foreground uppercase tracking-wide">Progress</p>
+                      <p className="text-heading-md font-bold">{activeGoal.progress || 0}%</p>
+                    </CardContent>
+                  </Card>
+                </div>
+
+                {/* Progress Bar */}
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <p className="text-body-sm font-semibold text-muted-foreground">Overall Progress</p>
+                    <p className="text-body-sm font-bold">{activeGoal.progress || 0}%</p>
+                  </div>
+                  <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-primary transition-all duration-500"
+                      style={{ width: `${activeGoal.progress || 0}%` }}
+                    />
+                  </div>
+                </div>
+
+                <Button
+                  onClick={() => router.push('/dashboard/goal')}
+                  className="w-full"
+                >
+                  Manage Goal
+                </Button>
+              </CardContent>
+            </Card>
 
             {/* Quick Actions */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <button
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Card
+                className="cursor-pointer hover:bg-accent transition-colors"
                 onClick={() => router.push('/dashboard/progress')}
-                className="bg-white rounded-lg shadow-lg p-8 text-left hover:shadow-xl transition-shadow"
               >
-                <div className="text-4xl mb-4">✓</div>
-                <h3 className="text-xl font-bold mb-2">Daily Check-In</h3>
-                <p className="text-gray-600">Log your progress and keep your streak alive</p>
-              </button>
+                <CardContent className="p-4 space-y-2">
+                  <div className="text-2xl">✓</div>
+                  <CardTitle className="text-heading-md">Daily Check-In</CardTitle>
+                  <CardDescription className="text-body-sm">Log your progress and keep your streak alive</CardDescription>
+                </CardContent>
+              </Card>
 
-              <button
-                onClick={() => router.push('/dashboard/goal')}
-                className="bg-white rounded-lg shadow-lg p-8 text-left hover:shadow-xl transition-shadow"
+              <Card
+                className="cursor-pointer hover:bg-accent transition-colors"
+                onClick={() => router.push('/dashboard/progress')}
               >
-                <div className="text-4xl mb-4">📊</div>
-                <h3 className="text-xl font-bold mb-2">View Progress</h3>
-                <p className="text-gray-600">See your check-in history and track trends</p>
-              </button>
+                <CardContent className="p-4 space-y-2">
+                  <div className="text-2xl">📊</div>
+                  <CardTitle className="text-heading-md">View Progress</CardTitle>
+                  <CardDescription className="text-body-sm">See your check-in history and track trends</CardDescription>
+                </CardContent>
+              </Card>
             </div>
           </>
         ) : (
           /* No Goal State */
-          <div className="bg-white rounded-lg shadow-lg p-16 text-center">
-            <div className="text-8xl mb-6">🎯</div>
-            <h2 className="text-3xl font-bold mb-4">Ready to get started?</h2>
-            <p className="text-gray-600 text-lg mb-8">
-              Set your one goal and start making progress today.
-            </p>
-            <button
-              onClick={() => router.push('/dashboard/goal')}
-              className="px-8 py-4 bg-black text-white rounded-lg font-semibold text-lg hover:bg-gray-800"
-            >
-              Set Your Goal
-            </button>
-          </div>
+          <Card>
+            <CardContent className="p-8 text-center space-y-4">
+              <div className="text-6xl">🎯</div>
+              <div className="space-y-2">
+                <CardTitle className="text-heading-xl">Ready to get started?</CardTitle>
+                <CardDescription className="text-body-md">Set your one goal and start making progress today.</CardDescription>
+              </div>
+              <Button
+                onClick={() => router.push('/dashboard/goal')}
+                size="lg"
+              >
+                Set Your Goal
+              </Button>
+            </CardContent>
+          </Card>
         )}
       </div>
     </ProtectedRoute>

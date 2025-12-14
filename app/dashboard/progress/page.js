@@ -3,15 +3,18 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { API_URL } from '@/lib/api';
-import { SkeletonStats, SkeletonCard, SkeletonList } from '@/components/Skeleton';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 
 export default function ProgressPage() {
   const [activeGoal, setActiveGoal] = useState(null);
   const [todayCheckIn, setTodayCheckIn] = useState(null);
   const [checkIns, setCheckIns] = useState([]);
+  const [completedGoals, setCompletedGoals] = useState([]);
   const [streak, setStreak] = useState(0);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showHistory, setShowHistory] = useState(false);
   
   // Form state
   const [progress, setProgress] = useState(0);
@@ -30,8 +33,9 @@ export default function ProgressPage() {
       const headers = { 'Authorization': `Bearer ${token}` };
 
       // Load all data in parallel
-      const [goalRes, todayRes, streakRes, statsRes] = await Promise.all([
+      const [goalRes, allGoalsRes, todayRes, streakRes, statsRes] = await Promise.all([
         fetch(`${API_URL}/api/goals/active`, { headers }),
+        fetch(`${API_URL}/api/goals`, { headers }),
         fetch(`${API_URL}/api/checkins/today`, { headers }),
         fetch(`${API_URL}/api/checkins/streak`, { headers }),
         fetch(`${API_URL}/api/checkins/stats`, { headers }),
@@ -49,6 +53,12 @@ export default function ProgressPage() {
             setCheckIns(checkInsData.checkIns || []);
           }
         }
+      }
+
+      if (allGoalsRes.ok) {
+        const allGoalsData = await allGoalsRes.json();
+        const completed = allGoalsData.goals?.filter(g => g.status === 'completed') || [];
+        setCompletedGoals(completed);
       }
 
       if (todayRes.ok) {
@@ -124,184 +134,257 @@ export default function ProgressPage() {
 
   if (loading) {
     return (
-      <div className="max-w-6xl mx-auto space-y-6">
-        <div>
-          <div className="h-10 bg-gray-200 rounded w-64 mb-2 animate-pulse"></div>
-          <div className="h-6 bg-gray-200 rounded w-96 animate-pulse"></div>
+      <div className="space-y-4">
+        <div className="h-10 bg-muted rounded-md w-64 mb-2 animate-pulse"></div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <Card><CardContent className="p-4 h-24 bg-muted animate-pulse"></CardContent></Card>
+          <Card><CardContent className="p-4 h-24 bg-muted animate-pulse"></CardContent></Card>
+          <Card><CardContent className="p-4 h-24 bg-muted animate-pulse"></CardContent></Card>
         </div>
-        <SkeletonStats />
-        <SkeletonCard />
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <div className="h-8 bg-gray-200 rounded w-48 mb-6 animate-pulse"></div>
-          <SkeletonList />
-        </div>
+        <Card>
+          <CardContent className="p-4 space-y-3">
+            <div className="h-4 bg-muted animate-pulse rounded"></div>
+            <div className="h-4 bg-muted animate-pulse rounded w-3/4"></div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   if (!activeGoal) {
     return (
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-white rounded-lg shadow-lg p-16 text-center">
-          <div className="text-8xl mb-6">🎯</div>
-          <h2 className="text-3xl font-bold mb-4">No Active Goal</h2>
-          <p className="text-gray-600 text-lg">
-            Set a goal first to start tracking your progress.
-          </p>
+      <div className="space-y-4">
+        <div>
+          <h1 className="text-heading-2xl font-bold text-foreground">Progress Tracking</h1>
+          <p className="text-body-md text-muted-foreground">Track your daily progress</p>
         </div>
+        <Card>
+          <CardContent className="p-8 text-center space-y-4">
+            <div className="text-6xl">🎯</div>
+            <div className="space-y-2">
+              <CardTitle className="text-heading-xl">No Active Goal</CardTitle>
+              <CardDescription className="text-body-md">
+                Set a goal first to start tracking your progress.
+              </CardDescription>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="space-y-4">
       {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold mb-2">Progress Tracking</h1>
-        <p className="text-gray-600 text-lg">Track your daily progress on: <span className="font-semibold">{activeGoal.title}</span></p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-heading-2xl font-bold text-foreground">Progress Tracking</h1>
+          <p className="text-body-md text-muted-foreground">
+            {activeGoal.title}
+          </p>
+        </div>
+        {completedGoals.length > 0 && (
+          <Button variant="outline" onClick={() => setShowHistory(!showHistory)}>
+            {showHistory ? 'Hide' : 'Show'} History
+          </Button>
+        )}
       </div>
 
+      {/* Completed Goals History */}
+      {showHistory && completedGoals.length > 0 && (
+        <Card>
+          <CardHeader className="p-4 pb-3">
+            <CardTitle className="text-heading-lg">Completed Goals</CardTitle>
+            <CardDescription className="text-body-sm">
+              Your achievements and milestones
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-4 pt-0 space-y-3">
+            {completedGoals.map((goal) => (
+              <Card key={goal._id} className="bg-secondary">
+                <CardContent className="p-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="flex-1">
+                      <h3 className="text-body-md font-semibold text-foreground">{goal.title}</h3>
+                      {goal.description && (
+                        <p className="text-body-sm text-muted-foreground mt-1">{goal.description}</p>
+                      )}
+                      <div className="flex items-center gap-3 mt-2 text-body-xs text-muted-foreground">
+                        <span>Completed: {new Date(goal.completedAt).toLocaleDateString()}</span>
+                        <span>•</span>
+                        <span>{goal.progress}% Progress</span>
+                      </div>
+                    </div>
+                    <span className="text-2xl">🎉</span>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </CardContent>
+        </Card>
+      )}
+
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Streak */}
-        <div className="bg-gradient-to-br from-orange-500 to-red-500 text-white rounded-lg shadow-lg p-6">
-          <div className="text-5xl mb-2">🔥</div>
-          <div className="text-4xl font-bold mb-1">{streak}</div>
-          <div className="text-orange-100">Day Streak</div>
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <Card className="bg-gradient-to-br from-orange-500 to-red-500 text-white border-0">
+          <CardContent className="p-4">
+            <div className="text-4xl mb-2">🔥</div>
+            <div className="text-display-sm font-bold mb-1">{streak}</div>
+            <div className="text-body-sm opacity-90">Day Streak</div>
+          </CardContent>
+        </Card>
 
-        {/* Total Check-ins */}
-        <div className="bg-gradient-to-br from-blue-500 to-indigo-500 text-white rounded-lg shadow-lg p-6">
-          <div className="text-5xl mb-2">✓</div>
-          <div className="text-4xl font-bold mb-1">{stats?.totalCheckIns || 0}</div>
-          <div className="text-blue-100">Total Check-ins</div>
-        </div>
+        <Card className="bg-gradient-to-br from-blue-500 to-indigo-500 text-white border-0">
+          <CardContent className="p-4">
+            <div className="text-4xl mb-2">✓</div>
+            <div className="text-display-sm font-bold mb-1">{stats?.totalCheckIns || 0}</div>
+            <div className="text-body-sm opacity-90">Total Check-ins</div>
+          </CardContent>
+        </Card>
 
-        {/* Average Progress */}
-        <div className="bg-gradient-to-br from-green-500 to-teal-500 text-white rounded-lg shadow-lg p-6">
-          <div className="text-5xl mb-2">📈</div>
-          <div className="text-4xl font-bold mb-1">{stats?.avgProgress || 0}%</div>
-          <div className="text-green-100">Avg Progress</div>
-        </div>
+        <Card className="bg-gradient-to-br from-green-500 to-teal-500 text-white border-0">
+          <CardContent className="p-4">
+            <div className="text-4xl mb-2">📈</div>
+            <div className="text-display-sm font-bold mb-1">{stats?.avgProgress || 0}%</div>
+            <div className="text-body-sm opacity-90">Avg Progress</div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Daily Check-in Form */}
-      <div className="bg-white rounded-lg shadow-lg p-8">
-        <h2 className="text-2xl font-bold mb-6">Today's Check-In</h2>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Progress Slider */}
-          <div>
-            <label className="block text-sm font-semibold mb-2">
-              Progress: {progress}%
-            </label>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              value={progress}
-              onChange={(e) => setProgress(e.target.value)}
-              className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-black"
-            />
-            <div className="flex justify-between text-xs text-gray-500 mt-1">
-              <span>0%</span>
-              <span>25%</span>
-              <span>50%</span>
-              <span>75%</span>
-              <span>100%</span>
+      <Card>
+        <CardHeader className="p-4 pb-3">
+          <CardTitle className="text-heading-lg">Today's Check-In</CardTitle>
+          <CardDescription className="text-body-sm">
+            Log your daily progress and keep your streak alive
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="p-4 pt-0">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Progress Slider */}
+            <div className="space-y-2">
+              <label className="block text-body-sm font-medium text-foreground">
+                Progress: {progress}%
+              </label>
+              <input
+                type="range"
+                min="0"
+                max="100"
+                value={progress}
+                onChange={(e) => setProgress(e.target.value)}
+                className="w-full h-2 bg-secondary rounded-lg appearance-none cursor-pointer accent-primary"
+              />
+              <div className="flex justify-between text-body-xs text-muted-foreground">
+                <span>0%</span>
+                <span>25%</span>
+                <span>50%</span>
+                <span>75%</span>
+                <span>100%</span>
+              </div>
             </div>
-          </div>
 
-          {/* Mood Selection */}
-          <div>
-            <label className="block text-sm font-semibold mb-3">How are you feeling?</label>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {Object.entries(moodEmojis).map(([moodValue, emoji]) => (
-                <button
-                  key={moodValue}
-                  type="button"
-                  onClick={() => setMood(moodValue)}
-                  className={`p-4 border-2 rounded-lg text-center transition-all touch-manipulation ${
-                    mood === moodValue
-                      ? 'border-black bg-gray-50 scale-105'
-                      : 'border-gray-300 hover:border-gray-400'
-                  }`}
-                >
-                  <div className="text-3xl mb-1">{emoji}</div>
-                  <div className="text-xs font-medium capitalize">{moodValue}</div>
-                </button>
-              ))}
+            {/* Mood Selection */}
+            <div className="space-y-2">
+              <label className="block text-body-sm font-medium text-foreground">
+                How are you feeling?
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {Object.entries(moodEmojis).map(([moodValue, emoji]) => (
+                  <button
+                    key={moodValue}
+                    type="button"
+                    onClick={() => setMood(moodValue)}
+                    className={`p-3 border rounded-md text-center transition-all ${
+                      mood === moodValue
+                        ? 'border-primary bg-primary/10 scale-105'
+                        : 'border-input hover:border-primary/50'
+                    }`}
+                  >
+                    <div className="text-2xl mb-1">{emoji}</div>
+                    <div className="text-body-xs font-medium capitalize">{moodValue}</div>
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Note */}
-          <div>
-            <label className="block text-sm font-semibold mb-2">Notes (Optional)</label>
-            <textarea
-              rows={3}
-              maxLength={500}
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-black"
-              placeholder="What did you accomplish today? Any challenges?"
-            />
-          </div>
+            {/* Note */}
+            <div className="space-y-2">
+              <label className="block text-body-sm font-medium text-foreground">
+                Notes (Optional)
+              </label>
+              <textarea
+                rows={3}
+                maxLength={500}
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-body-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-none"
+                placeholder="What did you accomplish today? Any challenges?"
+              />
+            </div>
 
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full px-6 py-4 bg-black text-white rounded-lg font-semibold text-lg hover:bg-gray-800 disabled:bg-gray-400"
-          >
-            {submitting ? 'Saving...' : todayCheckIn ? 'Update Check-In' : 'Save Check-In'}
-          </button>
-        </form>
-      </div>
+            <Button
+              type="submit"
+              disabled={submitting}
+              className="w-full"
+            >
+              {submitting ? 'Saving...' : todayCheckIn ? 'Update Check-In' : 'Save Check-In'}
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
 
       {/* Check-in History */}
       {checkIns.length > 0 && (
-        <div className="bg-white rounded-lg shadow-lg p-8">
-          <h2 className="text-2xl font-bold mb-6">Check-In History</h2>
-          <div className="space-y-4">
+        <Card>
+          <CardHeader className="p-4 pb-3">
+            <CardTitle className="text-heading-lg">Check-In History</CardTitle>
+            <CardDescription className="text-body-sm">
+              Your progress over time
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-4 pt-0 space-y-3">
             {checkIns.map((checkIn) => (
-              <div
-                key={checkIn._id}
-                className="flex items-start gap-4 p-4 border border-gray-200 rounded-lg hover:bg-gray-50"
-              >
-                {/* Date */}
-                <div className="flex-shrink-0 text-center">
-                  <div className="text-2xl font-bold">
-                    {new Date(checkIn.date).getDate()}
-                  </div>
-                  <div className="text-xs text-gray-500">
-                    {new Date(checkIn.date).toLocaleDateString('en-US', { month: 'short' })}
-                  </div>
-                </div>
+              <Card key={checkIn._id} className="bg-secondary hover:bg-accent transition-colors">
+                <CardContent className="p-3">
+                  <div className="flex items-start gap-3">
+                    {/* Date */}
+                    <div className="flex-shrink-0 text-center min-w-[3rem]">
+                      <div className="text-heading-md font-bold">
+                        {new Date(checkIn.date).getDate()}
+                      </div>
+                      <div className="text-body-xs text-muted-foreground">
+                        {new Date(checkIn.date).toLocaleDateString('en-US', { month: 'short' })}
+                      </div>
+                    </div>
 
-                {/* Content */}
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="text-lg font-bold">{checkIn.progress}%</div>
-                    {checkIn.mood && (
-                      <span className="text-2xl">{moodEmojis[checkIn.mood]}</span>
-                    )}
-                  </div>
-                  {checkIn.note && (
-                    <p className="text-gray-600 text-sm">{checkIn.note}</p>
-                  )}
-                </div>
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="text-body-md font-bold">{checkIn.progress}%</div>
+                        {checkIn.mood && (
+                          <span className="text-xl">{moodEmojis[checkIn.mood]}</span>
+                        )}
+                      </div>
+                      {checkIn.note && (
+                        <p className="text-body-sm text-muted-foreground">{checkIn.note}</p>
+                      )}
+                    </div>
 
-                {/* Progress Bar */}
-                <div className="flex-shrink-0 w-32">
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-black h-2 rounded-full"
-                      style={{ width: `${checkIn.progress}%` }}
-                    />
+                    {/* Progress Bar */}
+                    <div className="flex-shrink-0 w-24 sm:w-32">
+                      <div className="w-full bg-muted rounded-full h-2">
+                        <div
+                          className="bg-primary h-2 rounded-full transition-all"
+                          style={{ width: `${checkIn.progress}%` }}
+                        />
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             ))}
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

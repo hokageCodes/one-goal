@@ -14,5 +14,19 @@
   ],
   "env": {
     "NODE_ENV": "production"
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/notifications/morning",
+      "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/notifications/evening",
+      "schedule": "0 18 * * *"
+    },
+    {
+      "path": "/api/notifications/streak",
+      "schedule": "0 20 * * *"
+    }
+  ]
 }

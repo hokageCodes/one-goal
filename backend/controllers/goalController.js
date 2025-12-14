@@ -1,5 +1,7 @@
 const Goal = require('../models/Goal');
 const { asyncHandler } = require('../middleware/errorHandler');
+const sendEmail = require('../utils/sendEmail');
+const emailTemplates = require('../utils/emailTemplates');
 
 // @desc    Create new goal
 // @route   POST /api/goals
@@ -125,6 +127,20 @@ exports.completeGoal = asyncHandler(async (req, res) => {
   goal.progress = 100;
   goal.completedAt = new Date();
   await goal.save();
+
+  // Send celebration email
+  try {
+    const user = await goal.populate('user');
+    const template = emailTemplates.goalCompleted(user.user, goal);
+    await sendEmail({
+      to: user.user.email,
+      subject: template.subject,
+      html: template.html,
+    });
+  } catch (emailError) {
+    console.error('Failed to send completion email:', emailError);
+    // Don't fail the request if email fails
+  }
 
   res.status(200).json({
     success: true,

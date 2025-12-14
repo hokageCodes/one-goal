@@ -30,8 +30,8 @@ const Logo = () => (
 export default function Footer() {
   return (
     <footer className="border-t bg-background mt-auto w-full">
-      <div className="w-full px-2 md:container md:mx-auto">
-        <div className="py-12 md:py-16">
+      <div className="w-full px-4 md:container md:mx-auto">
+        <div className="py-8 md:py-12">
           <div className="flex flex-col items-center space-y-8 md:space-y-12">
             <Logo />
             
@@ -66,7 +66,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t py-6">
+        <div className="border-t py-4">
           <div className="flex flex-col items-center gap-4 md:flex-row md:justify-between">
             <p className="text-body-sm text-muted-foreground text-center md:text-left">
               © {new Date().getFullYear()} One Goal. All rights reserved.

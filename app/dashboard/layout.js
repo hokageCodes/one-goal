@@ -30,7 +30,7 @@ export default function DashboardLayout({ children }) {
   const navigation = isAdmin() ? adminNavigation : userNavigation;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Mobile sidebar backdrop */}
       {sidebarOpen && (
         <div
@@ -41,35 +41,35 @@ export default function DashboardLayout({ children }) {
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-full w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-full w-64 bg-card border-r transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className="flex flex-col h-full overflow-y-auto">
           {/* Logo */}
-          <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200 flex-shrink-0">
-            <Link href="/dashboard" className="text-2xl font-bold">
+          <div className="flex items-center justify-between h-16 px-4 border-b flex-shrink-0">
+            <Link href="/dashboard" className="text-heading-lg font-bold text-foreground">
               ONE GOAL
             </Link>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden text-gray-500 hover:text-gray-700"
+              className="lg:hidden text-muted-foreground hover:text-foreground"
             >
               ✕
             </button>
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+          <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
                 onClick={() => setSidebarOpen(false)}
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                className={`flex items-center px-3 py-2.5 text-body-sm font-medium rounded-md transition-colors ${
                   pathname === item.href
-                    ? 'bg-black text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
+                    ? 'bg-primary text-primary-foreground'
+                    : 'text-foreground hover:bg-accent hover:text-accent-foreground'
                 }`}
               >
                 <span className="mr-3">{item.icon}</span>
@@ -79,10 +79,10 @@ export default function DashboardLayout({ children }) {
           </nav>
 
           {/* Logout button */}
-          <div className="p-4 border-t border-gray-200">
+          <div className="p-4 border-t">
             <button
               onClick={logout}
-              className="w-full flex items-center px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              className="w-full flex items-center px-3 py-2.5 text-body-sm font-medium text-destructive hover:bg-destructive/10 rounded-md transition-colors"
             >
               <span className="mr-3">🚪</span>
               Logout
@@ -94,12 +94,12 @@ export default function DashboardLayout({ children }) {
       {/* Main content area */}
       <div className="lg:pl-64">
         {/* Header */}
-        <header className="sticky top-0 z-30 bg-white border-b border-gray-200">
-          <div className="flex items-center justify-between h-16 px-4 sm:px-6">
+        <header className="sticky top-0 z-30 bg-card border-b">
+          <div className="flex items-center justify-between h-16 px-4">
             {/* Mobile menu button */}
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden text-gray-500 hover:text-gray-700"
+              className="lg:hidden text-muted-foreground hover:text-foreground"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -108,20 +108,20 @@ export default function DashboardLayout({ children }) {
 
             {/* Page title */}
             <div className="flex-1 px-4">
-              <h1 className="text-xl font-semibold text-gray-900">
+              <h1 className="text-heading-lg font-semibold text-foreground">
                 {isAdmin() ? 'Admin Dashboard' : 'Dashboard'}
               </h1>
             </div>
 
             {/* User info */}
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center gap-3">
               <div className="hidden sm:block text-right">
-                <p className="text-sm font-semibold text-gray-900">{user?.name}</p>
-                <p className="text-xs text-gray-500">
+                <p className="text-body-sm font-semibold text-foreground">{user?.name}</p>
+                <p className="text-body-xs text-muted-foreground">
                   {isAdmin() ? 'Administrator' : user?.email}
                 </p>
               </div>
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-black text-white font-semibold">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary text-primary-foreground font-semibold text-body-sm">
                 {user?.name?.charAt(0).toUpperCase()}
               </div>
             </div>
@@ -129,7 +129,7 @@ export default function DashboardLayout({ children }) {
         </header>
 
         {/* Page content */}
-        <main className="p-4 sm:p-6 lg:p-8">
+        <main className="p-4">
           {children}
         </main>
       </div>

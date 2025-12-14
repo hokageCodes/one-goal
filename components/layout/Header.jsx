@@ -42,10 +42,10 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <nav className="flex h-16 items-center justify-between px-2 md:container md:mx-auto">
+      <nav className="flex h-16 items-center justify-between px-4 md:container md:mx-auto">
         <Logo />
 
-        <div className="hidden md:flex md:items-center md:space-x-6">
+        <div className="hidden md:flex md:items-center md:gap-6">
           {navItems.map((item) => (
             <NavLink key={item.name} href={item.href}>
               {item.name}
@@ -53,7 +53,7 @@ export default function Header() {
           ))}
         </div>
 
-        <div className="hidden md:flex md:items-center md:space-x-4">
+        <div className="hidden md:flex md:items-center md:gap-3">
           {user ? (
             <Button asChild>
               <Link href="/dashboard">Dashboard</Link>
@@ -83,13 +83,13 @@ export default function Header() {
 
       {mobileMenuOpen && (
         <div className="border-t bg-background md:hidden">
-          <div className="px-2 space-y-4 py-4">
+          <div className="p-4 space-y-3">
             {navItems.map((item) => (
               <NavLink key={item.name} href={item.href} onClick={closeMenu} className="block text-base">
                 {item.name}
               </NavLink>
             ))}
-            <div className="flex flex-col space-y-2 pt-4 border-t">
+            <div className="flex flex-col space-y-2 pt-3 border-t">
               {user ? (
                 <Button asChild className="w-full">
                   <Link href="/dashboard" onClick={closeMenu}>Dashboard</Link>
