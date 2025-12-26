@@ -24,7 +24,7 @@ app.use(cookieParser());
 const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:3001',
-  'https://one-goal-xi.vercel.app'
+  'https://one-goal-xi.vercel.app',
 ];
 
 app.use(cors({
