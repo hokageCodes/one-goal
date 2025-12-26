@@ -16,9 +16,6 @@ Node.js + Express + MongoDB backend for the One Goal productivity app.
 
 ### 1. Install Dependencies
 
-```bash
-npm install
-```
 
 ### 2. Environment Variables
 
