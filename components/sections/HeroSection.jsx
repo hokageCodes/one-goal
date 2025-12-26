@@ -30,7 +30,7 @@ export default function HeroSection() {
           
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center pt-4">
             <Button size="lg" className="text-base px-8 py-6 h-auto" asChild>
-              <Link href="/signup">Start Finishing Things</Link>
+              <Link href="/register">Start Finishing Things</Link>
             </Button>
             <Button size="lg" variant="outline" className="text-base px-8 py-6 h-auto" asChild>
               <Link href="/features">See How It Works</Link>

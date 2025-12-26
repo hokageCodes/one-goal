@@ -2,12 +2,9 @@ const express = require('express');
 const { body } = require('express-validator');
 const {
   register,
-  verifyEmail,
   login,
-  logout,
+  // logout, (removed)
   getMe,
-  forgotPassword,
-  resetPassword,
 } = require('../controllers/authController');
 const { protect } = require('../middleware/auth');
 
@@ -48,28 +45,13 @@ const loginValidation = [
     .withMessage('Password is required'),
 ];
 
-const forgotPasswordValidation = [
-  body('email')
-    .isEmail()
-    .normalizeEmail()
-    .withMessage('Please provide a valid email'),
-];
-
-const resetPasswordValidation = [
-  body('password')
-    .isLength({ min: 8 })
-    .withMessage('Password must be at least 8 characters')
-    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
-    .withMessage('Password must contain at least one uppercase letter, one lowercase letter, and one number'),
-];
+// Password reset and forgot password removed
 
 // Routes
+
 router.post('/register', registerValidation, register);
-router.get('/verify-email/:token', verifyEmail);
 router.post('/login', loginValidation, login);
-router.post('/logout', protect, logout);
+// router.post('/logout', protect, logout); (removed)
 router.get('/me', protect, getMe);
-router.post('/forgot-password', forgotPasswordValidation, forgotPassword);
-router.put('/reset-password/:token', resetPasswordValidation, resetPassword);
 
 module.exports = router;

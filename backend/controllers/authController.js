@@ -1,9 +1,7 @@
 const crypto = require('crypto');
 const { validationResult } = require('express-validator');
 const User = require('../models/User');
-const sendEmail = require('../utils/sendEmail');
-const verificationEmail = require('../templates/verificationEmail');
-const resetPasswordEmail = require('../templates/resetPasswordEmail');
+// ...existing code...
 const { asyncHandler } = require('../middleware/errorHandler');
 
 // @desc    Register user
@@ -33,63 +31,13 @@ exports.register = asyncHandler(async (req, res, next) => {
     lastName,
   });
 
-  // Generate verification token
-  const verificationToken = user.generateVerificationToken();
-  await user.save();
-
-  // Create verification URL
-  const verificationUrl = `${process.env.CLIENT_URL}/verify-email?token=${verificationToken}`;
-
-  // Send verification email
-  try {
-    await sendEmail({
-      email: user.email,
-      subject: 'Verify Your Email - One Goal',
-      html: verificationEmail(verificationUrl, firstName),
-    });
-
-    res.status(201).json({
-      success: true,
-      message: 'Registration successful. Check your email to verify your account.',
-    });
-  } catch (error) {
-    // If email fails, delete the user
-    await User.findByIdAndDelete(user._id);
-    console.error('Email send error:', error);
-    return res.status(500).json({ message: 'Error sending verification email. Please try again.' });
-  }
-});
-
-// @desc    Verify email
-// @route   GET /api/auth/verify-email/:token
-// @access  Public
-exports.verifyEmail = asyncHandler(async (req, res, next) => {
-  const { token } = req.params;
-
-  // Hash token
-  const verificationToken = crypto.createHash('sha256').update(token).digest('hex');
-
-  // Find user with valid token
-  const user = await User.findOne({
-    verificationToken,
-    verificationTokenExpire: { $gt: Date.now() },
-  });
-
-  if (!user) {
-    return res.status(400).json({ message: 'Invalid or expired verification token' });
-  }
-
-  // Update user
-  user.isVerified = true;
-  user.verificationToken = undefined;
-  user.verificationTokenExpire = undefined;
-  await user.save();
-
-  res.status(200).json({
+  res.status(201).json({
     success: true,
-    message: 'Email verified successfully. You can now log in.',
+    message: 'Registration successful. You can now log in.',
   });
 });
+
+// Email verification removed
 
 // @desc    Login user
 // @route   POST /api/auth/login
@@ -128,11 +76,7 @@ exports.login = asyncHandler(async (req, res, next) => {
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
-  // Check if email is verified
-  if (!user.isVerified) {
-    console.log('Email not verified');
-    return res.status(401).json({ message: 'Please verify your email before logging in' });
-  }
+  // ...existing code...
 
   console.log('About to generate token...');
   
@@ -164,20 +108,7 @@ exports.login = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc    Logout user
-// @route   POST /api/auth/logout
-// @access  Private
-exports.logout = asyncHandler(async (req, res, next) => {
-  res.cookie('token', 'none', {
-    expires: new Date(Date.now() + 10 * 1000),
-    httpOnly: true,
-  });
-
-  res.status(200).json({
-    success: true,
-    message: 'Logged out successfully',
-  });
-});
+// ...existing code...
 
 // @desc    Get current logged in user
 // @route   GET /api/auth/me
@@ -191,109 +122,4 @@ exports.getMe = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc    Forgot password
-// @route   POST /api/auth/forgot-password
-// @access  Public
-exports.forgotPassword = asyncHandler(async (req, res, next) => {
-  // Validate input
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const { email } = req.body;
-
-  const user = await User.findOne({ email: email.toLowerCase() });
-  if (!user) {
-    // Don't reveal if user exists
-    return res.status(200).json({
-      success: true,
-      message: 'If an account exists with that email, you will receive a password reset link.',
-    });
-  }
-
-  // Generate reset token
-  const resetToken = user.generateResetToken();
-  await user.save();
-
-  // Create reset URL
-  const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
-
-  // Send email
-  try {
-    await sendEmail({
-      email: user.email,
-      subject: 'Password Reset Request - One Goal',
-      html: resetPasswordEmail(resetUrl, user.firstName),
-    });
-
-    res.status(200).json({
-      success: true,
-      message: 'If an account exists with that email, you will receive a password reset link.',
-    });
-  } catch (error) {
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
-    await user.save();
-
-    console.error('Email send error:', error);
-    return res.status(500).json({ message: 'Error sending email. Please try again.' });
-  }
-});
-
-// @desc    Reset password
-// @route   PUT /api/auth/reset-password/:token
-// @access  Public
-exports.resetPassword = asyncHandler(async (req, res, next) => {
-  // Validate input
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
-
-  const { token } = req.params;
-  const { password } = req.body;
-
-  // Hash token
-  const resetPasswordToken = crypto.createHash('sha256').update(token).digest('hex');
-
-  // Find user with valid token
-  const user = await User.findOne({
-    resetPasswordToken,
-    resetPasswordExpire: { $gt: Date.now() },
-  });
-
-  if (!user) {
-    return res.status(400).json({ message: 'Invalid or expired reset token' });
-  }
-
-  // Set new password
-  user.password = password;
-  user.resetPasswordToken = undefined;
-  user.resetPasswordExpire = undefined;
-  await user.save();
-
-  // Generate new auth token
-  const authToken = user.generateAuthToken();
-
-  // Set cookie
-  res.cookie('token', authToken, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-  });
-
-  res.status(200).json({
-    success: true,
-    message: 'Password reset successful',
-    token: authToken,
-    user: {
-      id: user._id,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      role: user.role,
-    },
-  });
-});
+// ...existing code...

@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./config/db');
-const { initializeScheduler } = require('./services/notificationScheduler');
+// Notification scheduler removed
 
 // Load environment variables
 dotenv.config();
@@ -11,11 +11,7 @@ dotenv.config();
 // Connect to MongoDB
 connectDB();
 
-// Initialize notification scheduler
-if (process.env.NODE_ENV !== 'production') {
-  initializeScheduler();
-  console.log('⏰ Notification scheduler started');
-}
+// Notification scheduler removed
 
 const app = express();
 
@@ -56,7 +52,7 @@ app.get('/api/health', (req, res) => {
 
 // Auth routes
 app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/auth', require('./routes/firebaseAuthRoutes'));
+// app.use('/api/auth', require('./routes/firebaseAuthRoutes')); (removed)
 
 // User routes
 app.use('/api/users', require('./routes/userRoutes'));
