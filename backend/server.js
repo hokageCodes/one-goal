@@ -38,7 +38,9 @@ app.use(cors({
     console.log(`✅ CORS allowed origin: ${origin}`);
     return callback(null, true);
   },
-  credentials: true
+  credentials: true,
+  optionsSuccessStatus: 200, // For legacy browsers
+  preflightContinue: true, // Ensure preflight requests are handled
 }));
 
 // Routes
