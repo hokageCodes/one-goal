@@ -36,7 +36,9 @@ export default function WaitlistPage() {
       setName("");
       setEmail("");
     } catch (err) {
-      if (err.message?.toLowerCase().includes("already on waitlist") || err.message?.toLowerCase().includes("409")) {
+      if (err.status === 409) {
+        setError("This email is already on the waitlist. Try another or check your inbox!");
+      } else if (err.message?.toLowerCase().includes("already on waitlist")) {
         setError("This email is already on the waitlist. Try another or check your inbox!");
       } else if (err.message?.toLowerCase().includes("ero")) {
         setError("Server error: unable to save your submission. Please try again later.");
