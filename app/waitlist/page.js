@@ -36,7 +36,15 @@ export default function WaitlistPage() {
       setName("");
       setEmail("");
     } catch (err) {
-      setError(err.message || "Something went wrong. Please try again.");
+      if (err.message?.toLowerCase().includes("already on waitlist") || err.message?.toLowerCase().includes("409")) {
+        setError("This email is already on the waitlist. Try another or check your inbox!");
+      } else if (err.message?.toLowerCase().includes("ero")) {
+        setError("Server error: unable to save your submission. Please try again later.");
+      } else if (err.message?.toLowerCase().includes("network")) {
+        setError("Network error: please check your connection and try again.");
+      } else {
+        setError(err.message || "Something went wrong. Please try again.");
+      }
     } finally {
       setLoadingName(false);
     }
