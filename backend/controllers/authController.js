@@ -22,13 +22,15 @@ exports.register = asyncHandler(async (req, res, next) => {
     return res.status(400).json({ message: 'User already exists' });
   }
 
-  // Create user
+
+  // Create user (set isVerified: true by default for now)
   const user = await User.create({
     email: email.toLowerCase(),
     password,
     name: `${firstName} ${lastName}`.trim(),
     firstName,
     lastName,
+    isVerified: true,
   });
 
   res.status(201).json({

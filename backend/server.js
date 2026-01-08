@@ -68,6 +68,9 @@ app.use('/api/checkins', require('./routes/checkInRoutes'));
 // Admin routes
 app.use('/api/admin', require('./routes/adminRoutes'));
 
+// Waitlist routes
+app.use('/api/waitlist', require('./routes/waitlistRoutes'));
+
 // Notification routes (for testing)
 app.use('/api/notifications', require('./routes/notificationRoutes'));
 

@@ -20,10 +20,9 @@ export default function DashboardLayout({ children }) {
   ];
 
   const adminNavigation = [
-    { name: 'Admin Dashboard', href: '/dashboard/admin', icon: '⚙️' },
-    { name: 'Users', href: '/dashboard/admin/users', icon: '👥' },
-    { name: 'Goals Overview', href: '/dashboard/admin/goals', icon: '🎯' },
-    { name: 'System', href: '/dashboard/admin/system', icon: '🔧' },
+    { name: 'Overview', href: '/dashboard/admin', icon: '⚙️' },
+    { name: 'Waitlist', href: '/dashboard/admin/waitlist', icon: '📋' },
+    { name: 'Settings', href: '/dashboard/admin/settings', icon: '⚙️' },
   ];
 
   // Choose navigation based on role

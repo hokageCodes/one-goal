@@ -33,6 +33,15 @@ const goalValidation = [
     .withMessage('Deadline must be a valid date'),
 ];
 
+
+// Allow unauthenticated OPTIONS requests for CORS preflight
+router.use((req, res, next) => {
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 // All routes require authentication
 router.use(protect);
 router.use(requireVerified);

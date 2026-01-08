@@ -19,11 +19,11 @@ export default function ConditionalLayout({ children }) {
   // Otherwise, render with public nav/footer
   return (
     <>
-      <Header />
+      {/* <Header /> */}
       <main className="flex-1 w-full px-2 md:container md:mx-auto">
         {children}
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }
